@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBBA GM Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        #canvasContainer {
+            margin-top: 20px;
+        }
+        canvas {
+            border: 1px solid #000;
+            max-width: 90%;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        label {
+            margin-right: 10px;
+        }
+        /* COverlay container */
+        .overlay-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .overlay-option {
+            cursor: pointer;
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+        .overlay-name {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HBBA GM Tool</h1>
+    
+    <!-- Load image -->
+    <input type="file" id="imageLoader" accept="image/*"><br><br>
+
+    <!-- Overlays selection -->
+    <div id="overlayMenu">
+        <h3>Choose an color :</h3>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay1.png" alt="Overlay 1" width="100" onclick="selectOverlay('images/overlay1.png')">
+            <div class="overlay-name">GM Blue Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay2.png" alt="Overlay 2" width="100" onclick="selectOverlay('images/overlay2.png')">
+            <div class="overlay-name">GM Coral Reef Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay3.png" alt="Overlay 3" width="100" onclick="selectOverlay('images/overlay3.png')">
+            <div class="overlay-name">GM Fiery Red Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay4.png" alt="Overlay 4" width="100" onclick="selectOverlay('images/overlay4.png')">
+            <div class="overlay-name">GM Geometric Diamond Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay5.png" alt="Overlay 5" width="100" onclick="selectOverlay('images/overlay5.png')">
+            <div class="overlay-name">GM Gold Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay6.png" alt="Overlay 6" width="100" onclick="selectOverlay('images/overlay6.png')">
+            <div class="overlay-name">GM Golden Brown Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay7.png" alt="Overlay 7" width="100" onclick="selectOverlay('images/overlay7.png')">
+            <div class="overlay-name">GM Green Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay8.png" alt="Overlay 8" width="100" onclick="selectOverlay('images/overlay8.png')">
+            <div class="overlay-name">GM Groovy Stripes Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay9.png" alt="Overlay 9" width="100" onclick="selectOverlay('images/overlay9.png')">
+            <div class="overlay-name">GM Hemp Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay10.png" alt="Overlay 10" width="100" onclick="selectOverlay('images/overlay10.png')">
+            <div class="overlay-name">GM Polka Dots Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay11.png" alt="Overlay 11" width="100" onclick="selectOverlay('images/overlay11.png')">
+            <div class="overlay-name">GM Sea Blue Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay12.png" alt="Overlay 12" width="100" onclick="selectOverlay('images/overlay12.png')">
+            <div class="overlay-name">GM Silver Grey Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay13.png" alt="Overlay 13" width="100" onclick="selectOverlay('images/overlay13.png')">
+            <div class="overlay-name">GM Soft Lavender Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay14.png" alt="Overlay 14" width="100" onclick="selectOverlay('images/overlay14.png')">
+            <div class="overlay-name">GM Tie-Dye Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay15.png" alt="Overlay 15" width="100" onclick="selectOverlay('images/overlay15.png')">
+            <div class="overlay-name">GM White Fur</div>
+        </div>
+        <div class="overlay-container">
+            <img class="overlay-option" src="images/overlay16.png" alt="Overlay 16" width="100" onclick="selectOverlay('images/overlay16.png')">
+            <div class="overlay-name">GM Zebra Fur</div>
+        </div>
+    </div>
+    
+    <!-- Overlay controls -->
+    <div class="controls">
+        <label for="overlaySize">Overlay Size :</label>
+        <input type="range" id="overlaySize" min="10" max="200" value="100">
+        
+        <label for="overlayInsetX">Inset X :</label>
+        <input type="range" id="overlayInsetX" min="-200" max="200" value="0">
+        
+        <label for="overlayInsetY">Inset Y :</label>
+        <input type="range" id="overlayInsetY" min="-200" max="200" value="0">
+    </div>
+    
+    <!-- Canvas Container -->
+    <div id="canvasContainer">
+        <canvas id="imageCanvas"></canvas>
+    </div>
+    
+    <!-- Download button -->
+    <button id="downloadBtn">Download</button>
+
+    <script>
+        let canvas = document.getElementById('imageCanvas');
+        let ctx = canvas.getContext('2d');
+        let img = new Image();
+        let overlay = new Image();
+        let imgLoaded = false;
+
+        // Adjust Overlay
+        let overlaySize = 100;
+        let insetX = 0;
+        let insetY = 0;
+
+        // Load image from PC or mobile
+        document.getElementById('imageLoader').addEventListener('change', function(e){
+            let reader = new FileReader();
+            reader.onload = function(event){
+                img.onload = () => {
+                    imgLoaded = true;
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    draw();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // Overlay selection with click
+        function selectOverlay(src) {
+            overlay.src = src;
+            overlay.onload = draw;
+        }
+
+        // Adjust overlay size
+        document.getElementById('overlaySize').addEventListener('input', function() {
+            overlaySize = parseInt(this.value);
+            draw();
+        });
+
+        document.getElementById('overlayInsetX').addEventListener('input', function() {
+            insetX = parseInt(this.value);
+            draw();
+        });
+
+        document.getElementById('overlayInsetY').addEventListener('input', function() {
+            insetY = parseInt(this.value);
+            draw();
+        });
+
+        // Draw the image and overlay
+        function draw() {
+            if (imgLoaded) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // clean canvas
+                ctx.drawImage(img, 0, 0); // draw base image
+                if (overlay.src) {
+                    let width = (canvas.width * overlaySize) / 100;
+                    let height = (canvas.height * overlaySize) / 100;
+                    ctx.drawImage(overlay, insetX, insetY, width, height); // draw overlay with adjustment
+                }
+            }
+        }
+
+        // download visual
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            let link = document.createElement('a');
+            link.download = 'GmHBBA.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    </script>
+
+    <!-- Footer with opensea link and credits -->
+    <footer>
+        <p>
+            <a href="https://opensea.io/fr/collection/hippie-based-bored-apes-1" target="_blank">See the HBBA collection on Opensea</a>
+        </p>
+        <p>
+            GM Tool created by <a href="https://twitter.com/0x_Quickosss" target="_blank">@Quickosss</a>
+        </p>
+    </footer>
+</body>
+</html>
